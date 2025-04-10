@@ -265,7 +265,7 @@ body {
 .dashboard__right {
 	overflow: auto;
 	width: 100%;
-	height: 652px;
+	height: 800px;
 }
 
 .dashboard__right__header {

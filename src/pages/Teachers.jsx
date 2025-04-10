@@ -91,31 +91,43 @@ function Teachers() {
 		if (fullname.trim() === '') {
 			setNameError(true)
 			return
+		}else{
+			setNameError(false)
 		}
 
 		if (email.trim() === '') {
 			setEmailError(true)
 			return
+		}else{
+			setEmailError(false)
 		}
 
 		if (password.trim() === '') {
 			setPasswordError(true)
 			return
+		}else{
+			setPasswordError(false)
 		}
 
 		if (Role.trim() === '') {
 			setRoleError(true)
 			return
+		}else{
+			setRoleError(false)
 		}
 
 		if (phone_number.trim() === '') {
 			setPhoneError(true)
 			return
+		}else{
+			setPhoneError(false)
 		}
 
 		if (is_verified.trim() === '') {
 			setVerifiedError(true)
 			return
+		}else{
+			setVerifiedError(false)
 		}
 
 		setDisabled(true)
@@ -129,7 +141,7 @@ function Teachers() {
 					password,
 					phone_number,
 					Role,
-					image: image?.name,
+					image: 'rasm.png',
 					is_verified,
 				},
 				{
@@ -465,11 +477,11 @@ function Teachers() {
 													Back
 												</div>
 
-												<input
+												{/* <input
 													type='file'
 													accept='image/*'
 													onChange={e => setImgs(e.target.files[0])}
-												/>
+												/> */}
 											</form>
 										</div>
 									)
