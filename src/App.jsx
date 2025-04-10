@@ -4,7 +4,7 @@ import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import Dashboard from './pages/Dashboard';
 import Teachers from './pages/Teachers';
-import NotFound from './pages/NotFound';
+// import NotFound from './pages/NotFound';
 
 function isAuth() {
   return localStorage.getItem('token') !== null;  
@@ -26,7 +26,7 @@ function App() {
           <Route path='/teachers' element={<Teachers />} />
         </Route>
         
-        <Route path='*' element={<NotFound />} />
+        {/* <Route path='*' element={<NotFound />} /> */}
       </Routes>
     </>
   );
