@@ -101,7 +101,7 @@ function SignIn() {
 								{passwordError && (<p className='register__error'>Malumot kititing...</p>)}
 							</div>
 							<button disabled={isDisabled} className='register__btn' type='submit'>
-              {isDisabled ? <i class="fa-solid fa-spinner fa-spin-pulse" style={{fontSize: "20px"}}></i> : "Login"}
+              {isDisabled ? <i className="fa-solid fa-spinner fa-spin-pulse" style={{fontSize: "20px"}}></i> : "Login"}
 							</button>
 							<Link to='/' className='register__link'>
 								Sign Up

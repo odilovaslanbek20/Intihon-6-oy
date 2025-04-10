@@ -4,7 +4,7 @@ import { FaBars } from 'react-icons/fa6'
 import { IoIosLogOut } from 'react-icons/io'
 import { FaXmark } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
-import { useEffect, useRef, useState } from 'react'
+import { use, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 function Teachers() {
@@ -24,6 +24,16 @@ function Teachers() {
 	const [Role, setRole] = useState('')
 	const [is_verified, setVerified] = useState('')
 	const [isUser, setIsUser] = useState(true)
+	const [image, setImgs] = useState('')
+	const [nameError, setNameError] = useState(false)
+	const [emailError, setEmailError] = useState(false)
+	const [roleError, setRoleError] = useState(false)
+	const [phoneError, setPhoneError] = useState(false)
+	const [passwordError, setPasswordError] = useState(false)
+	const [verifiedError, setVerifiedError] = useState(false)
+
+
+	const userlar = useRef()
 
 	const pathName = location.pathname
 
@@ -63,6 +73,7 @@ function Teachers() {
 		localStorage.clear()
 		navigate('/signIn')
 	}
+	
 
 	useEffect(() => {
 		axios
@@ -77,17 +88,48 @@ function Teachers() {
 	function handleSubmit(e) {
 		e.preventDefault()
 
+		if (fullname.trim() === '') {
+			setNameError(true)
+			return
+		}
+
+		if (email.trim() === '') {
+			setEmailError(true)
+			return
+		}
+
+		if (password.trim() === '') {
+			setPasswordError(true)
+			return
+		}
+
+		if (Role.trim() === '') {
+			setRoleError(true)
+			return
+		}
+
+		if (phone_number.trim() === '') {
+			setPhoneError(true)
+			return
+		}
+
+		if (is_verified.trim() === '') {
+			setVerifiedError(true)
+			return
+		}
+
 		setDisabled(true)
 
 		axios
 			.post(
-				`https://api.ashyo.fullstackdev.uz/users/add`,
+				'https://api.ashyo.fullstackdev.uz/users/add',
 				{
 					fullname,
 					email,
-					phone_number,
 					password,
+					phone_number,
 					Role,
+					image: image?.name,
 					is_verified,
 				},
 				{
@@ -273,7 +315,7 @@ function Teachers() {
 																<tbody className='tbody'>
 																	{user?.map(users => {
 																		return (
-																			<tr>
+																			<tr ref={userlar}>
 																				<td
 																					onClick={() => userId(users?.id)}
 																					className='td name-cell'
@@ -331,6 +373,11 @@ function Teachers() {
 																type='text'
 																placeholder='Full Name'
 															/>
+															{nameError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 														<label>
 															<p className='teacher__form__text'>
@@ -342,6 +389,11 @@ function Teachers() {
 																type='email'
 																placeholder='Email address'
 															/>
+															{emailError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 														<label>
 															<p className='teacher__form__text'>Role</p>
@@ -353,6 +405,11 @@ function Teachers() {
 																<option value='USER'>USER</option>
 																<option value='ADMIN'>ADMIN</option>
 															</select>
+															{roleError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 													</div>
 													<div className='teacher__form__cards'>
@@ -366,6 +423,11 @@ function Teachers() {
 																type='phone'
 																placeholder='phone_number'
 															/>
+															{phoneError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 														<label>
 															<p className='teacher__form__text'>password</p>
@@ -375,6 +437,11 @@ function Teachers() {
 																type='password'
 																placeholder='password'
 															/>
+															{passwordError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 														<label>
 															<p className='teacher__form__text'>Is_verified</p>
@@ -386,12 +453,23 @@ function Teachers() {
 																<option value='true'>true</option>
 																<option value='false'>false</option>
 															</select>
+															{verifiedError && (
+																<p className='post__error'>
+																	Malumot kititing...
+																</p>
+															)}
 														</label>
 													</div>
 												</div>
 												<div onClick={handleBack} className='user__back'>
 													Back
 												</div>
+
+												<input
+													type='file'
+													accept='image/*'
+													onChange={e => setImgs(e.target.files[0])}
+												/>
 											</form>
 										</div>
 									)
@@ -439,7 +517,10 @@ function Teachers() {
 														</p>
 													</div>
 												</div>
-												<div onClick={handleBack} className='user__back'>
+												<div
+													onClick={() => window.history.back()}
+													className='user__back'
+												>
 													Back
 												</div>
 											</div>

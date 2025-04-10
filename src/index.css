@@ -70,6 +70,15 @@ body {
 	margin-bottom: 5px;
 }
 
+.post__error{
+	font-family: 'Roboto';
+	font-size: 14px;
+	font-weight: 600;
+	color: red;
+	margin-top: -20px;
+	margin-bottom: 20px;
+}
+
 /* REGISTER */
 
 .register .container {
