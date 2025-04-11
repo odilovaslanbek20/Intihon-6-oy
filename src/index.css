@@ -421,11 +421,9 @@ body {
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	padding: 0 200px;
 }
 
-.teachers__right {
-	width: 100%;
-}
 
 .teachers__logout {
 	display: flex;
@@ -457,6 +455,10 @@ body {
 	padding: 20px;
 }
 
+.teachers__right{
+	width: 100%;
+}
+
 .teachers__text {
 	font-family: 'Roboto';
 	font-weight: 600;
@@ -478,6 +480,7 @@ body {
 	height: 41px;
 	background: rgba(80, 156, 219, 1);
 	border-radius: 4px;
+	border: none;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -511,7 +514,7 @@ body {
 }
 
 .teachers__input {
-	width: 200px;
+	width: 100%;
 	height: 30px;
 	background-color: transparent;
 	outline: none;
@@ -557,79 +560,129 @@ body {
 	margin-bottom: 6px;
 }
 
-.decaration {
+
+
+/* General Form Styling */
+.form__post {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.post__title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+	font-family: "Roboto";
+}
+
+.post__label {
+  font-size: 16px;
+  margin-bottom: 8px;
+  display: block;
+  color: #333;
+	font-family: "Roboto";
+}
+
+.input__post {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+	font-family: "Roboto";
+}
+
+.input__post:focus {
+  border-color: #4e90fe;
+  outline: none;
+}
+
+input[type="file"] {
+  padding: 5px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+button.post__button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4e90fe;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+	font-family: "Roboto";
+}
+
+button.post__button:hover {
+  background-color: #3578e5;
+}
+
+select.input__post {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="file"] {
+  padding: 5px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.menu__back{
 	display: flex;
 	align-items: center;
-	gap: 50px;
+	gap: 30px;
 }
 
-.add__h2 {
-	font-family: 'Roboto';
-	font-weight: 500;
-	font-size: 20px;
-	line-height: 100%;
-	letter-spacing: 0%;
-	text-align: center;
+.post__back {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+  text-decoration: none; 
 }
 
-.submit {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin-bottom: 38px;
+.post__back:hover {
+  background-color: #0056b3;
 }
 
-.btn {
-	background-color: rgba(80, 156, 219, 1);
-	color: rgba(255, 255, 255, 1);
-	border-radius: 4px;
-	border: none;
-	font-family: 'Roboto';
-	font-weight: 600;
-	font-size: 14px;
+.post__back:focus {
+  outline: none;
 }
 
-.save__btn {
-	width: 80px;
-	height: 41px;
-	background: rgba(80, 156, 219, 1);
-	font-family: 'Roboto';
-	font-weight: 600;
-	font-size: 14px;
-	line-height: 100%;
-	letter-spacing: 0%;
-	text-align: center;
-	color: rgba(255, 255, 255, 1);
-	border-radius: 4px;
-	border: none;
-}
-
-.teacher__form__input {
-	width: 100%;
-	height: 42px;
-	border-radius: 4px;
-	border-width: 0.5px;
-	margin-bottom: 36px;
-	padding-left: 10px;
-
-	font-family: 'Roboto';
-	font-weight: 500;
-	font-size: 14px;
-	line-height: 100%;
-	letter-spacing: 0%;
-	color: rgba(138, 138, 138, 1);
-}
-
-.about {
-	height: 172px;
-	padding-left: 10px;
-	padding-top: 15px;
+.post__back:active {
+  transform: translateY(2px); 
 }
 
 /* USER */
 
 .teacher__user__cards {
-	overflow: auto;
+	overflow: scroll;
 	width: 100%;
 	height: 550px;
 	padding: 20px;
@@ -875,7 +928,7 @@ body {
 
 /* RESPONSIVE */
 
-@media (max-width: 1085px) {
+@media (max-width: 1250px) {
 	.teachers__left{
 		position: absolute;
 		left: -100%;
@@ -1001,6 +1054,16 @@ body {
 		width: 80px;
 		height: 30px;
 	}
+}
+
+@media (max-width: 600px) {
+  .form__post {
+    padding: 15px;
+  }
+
+  .post__title {
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 570px) {

@@ -1,27 +1,27 @@
+import axios from 'axios'
+import { useEffect, useRef, useState } from 'react'
+import { FaBars, FaXmark } from 'react-icons/fa6'
+import { IoIosSearch } from 'react-icons/io'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import '../index.css'
-import { FaBars } from 'react-icons/fa6'
-import { IoIosLogOut } from 'react-icons/io'
-import { FaXmark } from 'react-icons/fa6'
-import { IoIosSearch } from 'react-icons/io'
-import {  useEffect, useRef, useState } from 'react'
-import axios from 'axios'
 
 function Teachers() {
 	const menuRef = useRef()
 	const navigate = useNavigate()
 	const location = useLocation()
 	const [modal, setModal] = useState(false)
+	const [isPage, setIsPage] = useState(true)
 	const [message, setMessage] = useState('')
 	const [isCards, setCards] = useState(true)
 	const [fullname, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setIs] = useState('')
 	const [phone_number, setPhone] = useState('')
+	const [Role, setRole] = useState('')
+	const [image, setImage] = useState('')
+	const [is_verified, setVerified] = useState('')
 	const [users, setUsers] = useState('')
 	const [isDisabled, setDisabled] = useState(false)
-	const [Role, setRole] = useState('')
-	const [is_verified, setVerified] = useState('')
 	const [isUser, setIsUser] = useState(true)
 	const [nameError, setNameError] = useState(false)
 	const [emailError, setEmailError] = useState(false)
@@ -29,18 +29,13 @@ function Teachers() {
 	const [phoneError, setPhoneError] = useState(false)
 	const [passwordError, setPasswordError] = useState(false)
 	const [verifiedError, setVerifiedError] = useState(false)
-	const [originalUsers, setOriginalUsers] = useState(null);
-	const [displayUsers, setDisplayUsers] = useState(null);  
-	const [searchTerm, setSearchTerm] = useState('');
+	const [originalUsers, setOriginalUsers] = useState(null)
+	const [displayUsers, setDisplayUsers] = useState(null)
+	const [searchTerm, setSearchTerm] = useState('')
 
 	const userlar = useRef()
 
 	const pathName = location.pathname
-
-	const [isPage, setIspage] = useState(() => {
-		const saved = localStorage.getItem('isPage')
-		return saved !== null ? JSON.parse(saved) : true
-	})
 
 	function handleBack() {
 		setIspage(true)
@@ -78,98 +73,71 @@ function Teachers() {
 		axios
 			.get(`https://api.ashyo.fullstackdev.uz/users`)
 			.then(res => {
-				setOriginalUsers(res.data);
-				setDisplayUsers(res.data);  
-				setCards(false);
+				setOriginalUsers(res.data)
+				setDisplayUsers(res.data)
+				setCards(false)
 			})
 			.catch(error => console.log(error.message))
-	}, []);
-	
+	}, [])
+
 	function seorch() {
 		if (searchTerm.trim() === '') {
-			setDisplayUsers(originalUsers);
+			setDisplayUsers(originalUsers)
 		} else {
 			const filteredUsers = originalUsers.filter(user =>
 				user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
-			);
-			setDisplayUsers(filteredUsers);
+			)
+			setDisplayUsers(filteredUsers)
 		}
 	}
-	
+
 	useEffect(() => {
-		if (originalUsers) { 
-			seorch();
+		if (originalUsers) {
+			seorch()
 		}
-	}, [searchTerm, originalUsers]);
-	
+	}, [searchTerm, originalUsers])
 
-	function handleSubmit(e) {
+	const [formValues, setFormValues] = useState({
+		fullname: '',
+		email: '',
+		phone_number: '',
+		password: '',
+		role: 'ADMIN',
+		is_verified: false,
+	})
+
+	const handleChange = e => {
+		const { name, value, type, checked, files } = e.target
+
+		if (type === 'file') {
+			setImage(files[0])
+		} else {
+			setFormValues(prev => ({
+				...prev,
+				[name]: type === 'checkbox' ? checked : value,
+			}))
+		}
+	}
+
+	const handleSubmit = e => {
 		e.preventDefault()
-
-		if (fullname.trim() === '') {
-			setNameError(true)
-			return
-		}else{
-			setNameError(false)
-		}
-
-		if (email.trim() === '') {
-			setEmailError(true)
-			return
-		}else{
-			setEmailError(false)
-		}
-
-		if (password.trim() === '') {
-			setPasswordError(true)
-			return
-		}else{
-			setPasswordError(false)
-		}
-
-		if (Role.trim() === '') {
-			setRoleError(true)
-			return
-		}else{
-			setRoleError(false)
-		}
-
-		if (phone_number.trim() === '') {
-			setPhoneError(true)
-			return
-		}else{
-			setPhoneError(false)
-		}
-
-		if (is_verified.trim() === '') {
-			setVerifiedError(true)
-			return
-		}else{
-			setVerifiedError(false)
-		}
 
 		setDisabled(true)
 
+		const formData = new FormData()
+		formData.append('fullname', formValues.fullname)
+		formData.append('email', formValues.email)
+		formData.append('phone_number', formValues.phone_number)
+		formData.append('password', formValues.password)
+		formData.append('role', formValues.role)
+		formData.append('is_verified', formValues.is_verified ? 1 : 0) 
+		if (image) {
+			formData.append('image', image)
+		}
+
 		axios
-			.post(
-				'https://api.ashyo.fullstackdev.uz/users/add',
-				{
-					fullname,
-					email,
-					password,
-					phone_number,
-					Role,
-					image: 'rasm.png',
-					is_verified,
-				},
-				{
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-				}
-			)
+			.post('https://api.ashyo.fullstackdev.uz/users/add', formData)
 			.then(res => {
-				console.log('Yuborildi!')
 				setMessage(res.data.message)
 				setModal(true)
 				setTimeout(() => {
@@ -178,7 +146,6 @@ function Teachers() {
 				}, 2000)
 			})
 			.catch(error => {
-				console.log('Xato:', error.response?.data || error.message)
 				setMessage(error.message)
 				setModal(true)
 				setTimeout(() => {
@@ -187,7 +154,6 @@ function Teachers() {
 				}, 2000)
 			})
 	}
-
 
 	return (
 		<>
@@ -273,11 +239,19 @@ function Teachers() {
 						<div className='teachers__right'>
 							<div className='teachers__right__w'>
 								<div className='teachers__log'>
-									<FaBars
-										className='teachers__bars'
-										onClick={() => menuBar()}
-										style={{ fontSize: '20px' }}
-									/>
+									<div className='menu__back'>
+										<FaBars
+											className='teachers__bars'
+											onClick={() => menuBar()}
+											style={{ fontSize: '20px' }}
+										/>
+										<button
+											className='post__back'
+											onClick={() => setIsPage(true)}
+										>
+											Back
+										</button>
+									</div>
 									<div className='teachers__logout'>
 										<img
 											className='teachers__img'
@@ -298,23 +272,25 @@ function Teachers() {
 													<h2 className='teachers__hedding'>Teachers</h2>
 													<button
 														className='teachers__add__btn btn'
-														onClick={() => setIspage(false)}
+														onClick={() => setIsPage(false)}
 													>
 														Add Teachers
 													</button>
 												</div>
-												<div className='teachers__form'>
+												<form
+													className='teachers__form'
+													onChange={seorch}
+													action=''
+												>
 													<IoIosSearch style={{ fontSize: '20px' }} />
-													<form onChange={seorch} action=''>
-														<input
-															className='teachers__input'
-															type='text'
-															placeholder='Search for a student by name or email'
-															value={searchTerm}
-															onChange={(e) => setSearchTerm(e.target.value)}
-														/>
-													</form>
-												</div>
+													<input
+														className='teachers__input'
+														type='text'
+														placeholder='Search for a student by name or email'
+														value={searchTerm}
+														onChange={e => setSearchTerm(e.target.value)}
+													/>
+												</form>
 											</div>
 											<div className='teachers__main'>
 												{isCards ? (
@@ -349,26 +325,30 @@ function Teachers() {
 																	{displayUsers?.map(users => {
 																		return (
 																			<>
-																			  <tr ref={userlar}>
-																				<td
-																					onClick={() => userId(users?.id)}
-																					className='td name-cell'
-																				>
-																					<img
-																						className='table__img'
-																						src='download.png'
-																						alt=''
-																					/>
-																					<span>{users?.fullname}</span>
-																				</td>
-																				<td className='td'>{users?.role}</td>
-																				<td className='td'>{users?.id}</td>
-																				<td className='td'>{users?.email}</td>
-																				<td className='td'>
-																					{users?.phone_number}
-																				</td>
-																			</tr>
-																			{displayUsers.length === 0 && <p>Hech qanday foydalanuvchi topilmadi.</p>}
+																				<tr ref={userlar}>
+																					<td
+																						onClick={() => userId(users?.id)}
+																						className='td name-cell'
+																					>
+																						<img
+																							className='table__img'
+																							src='download.png'
+																							alt=''
+																						/>
+																						<span>{users?.fullname}</span>
+																					</td>
+																					<td className='td'>{users?.role}</td>
+																					<td className='td'>{users?.id}</td>
+																					<td className='td'>{users?.email}</td>
+																					<td className='td'>
+																						{users?.phone_number}
+																					</td>
+																				</tr>
+																				{displayUsers.length === 0 && (
+																					<p>
+																						Hech qanday foydalanuvchi topilmadi.
+																					</p>
+																				)}
 																			</>
 																		)
 																	})}
@@ -380,134 +360,97 @@ function Teachers() {
 											</div>
 										</>
 									) : (
-										<div className='create'>
+										<>
 											<form
+												className='form__post'
 												onSubmit={handleSubmit}
-												className='teacher__cards__form'
-												action=''
+												style={{ maxWidth: '400px', margin: '0 auto' }}
 											>
-												<div className='submit'>
-													<h2 className='add__h2'>Add teacher</h2>
-													<button disabled={isDisabled} className='save__btn'>
-														{isDisabled ? (
-															<i
-																className='fa-solid fa-spinner fa-spin-pulse'
-																style={{ fontSize: '20px' }}
-															></i>
-														) : (
-															'Save'
-														)}
-													</button>
-												</div>
-												<div className='decaration'>
-													<div className='teacher__form__cards'>
-														<label>
-															<p className='teacher__form__text'>Full Name</p>
-															<input
-																onChange={e => setName(e.target.value)}
-																className='teacher__form__input'
-																type='text'
-																placeholder='Full Name'
-															/>
-															{nameError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-														<label>
-															<p className='teacher__form__text'>
-																Email address
-															</p>
-															<input
-																onChange={e => setEmail(e.target.value)}
-																className='teacher__form__input'
-																type='email'
-																placeholder='Email address'
-															/>
-															{emailError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-														<label>
-															<p className='teacher__form__text'>Role</p>
-															<select
-																onChange={e => setRole(e.target.value)}
-																className='teacher__form__input'
-																type='text'
-															>
-																<option value='USER'>USER</option>
-																<option value='ADMIN'>ADMIN</option>
-															</select>
-															{roleError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-													</div>
-													<div className='teacher__form__cards'>
-														<label>
-															<p className='teacher__form__text'>
-																phone_number
-															</p>
-															<input
-																onChange={e => setPhone(e.target.value)}
-																className='teacher__form__input'
-																type='phone'
-																placeholder='phone_number'
-															/>
-															{phoneError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-														<label>
-															<p className='teacher__form__text'>password</p>
-															<input
-																onChange={e => setIs(e.target.value)}
-																className='teacher__form__input'
-																type='password'
-																placeholder='password'
-															/>
-															{passwordError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-														<label>
-															<p className='teacher__form__text'>Is_verified</p>
-															<select
-																onChange={e => setVerified(e.target.value)}
-																className='teacher__form__input'
-																type='text'
-															>
-																<option value='true'>true</option>
-																<option value='false'>false</option>
-															</select>
-															{verifiedError && (
-																<p className='post__error'>
-																	Malumot kititing...
-																</p>
-															)}
-														</label>
-													</div>
-												</div>
-												<div onClick={handleBack} className='user__back'>
-													Back
-												</div>
+												<h2 className='post__title'>
+													Yangi foydalanuvchi qo‘shish
+												</h2>
 
-												{/* <input
+												<label className='post__label'>Fullname:</label>
+												<input
+													className='input__post'
+													type='text'
+													name='fullname'
+													value={formValues.fullname}
+													onChange={handleChange}
+													required
+												/>
+
+												<label className='post__label'>Email:</label>
+												<input
+													className='input__post'
+													type='email'
+													name='email'
+													value={formValues.email}
+													onChange={handleChange}
+													required
+												/>
+
+												<label className='post__label'>
+													<input
+														className='input__post'
+														type='checkbox'
+														name='is_verified'
+														checked={formValues.is_verified}
+														onChange={handleChange}
+													/>
+													Tasdiqlanganmi?
+												</label>
+												<label className='post__label'>Rasm (image):</label>
+												<input
+													className='input__post'
 													type='file'
+													name='image'
 													accept='image/*'
-													onChange={e => setImgs(e.target.files[0])}
-												/> */}
+													onChange={handleChange}
+												/>
+
+												<label className='post__label'>Telefon raqam:</label>
+												<input
+													className='input__post'
+													type='text'
+													name='phone_number'
+													value={formValues.phone_number}
+													onChange={handleChange}
+													required
+												/>
+
+												<label className='post__label'>Parol:</label>
+												<input
+													className='input__post'
+													type='password'
+													name='password'
+													value={formValues.password}
+													onChange={handleChange}
+													required
+												/>
+												<label className='post__label'>Roli:</label>
+												<select
+													className='input__post'
+													name='role'
+													value={formValues.role}
+													onChange={handleChange}
+												>
+													<option value='ADMIN'>ADMIN</option>
+													<option value='USER'>USER</option>
+												</select>
+
+												<button disabled={isDisabled} className='post__button'>
+													{isDisabled ? (
+														<i
+															className='fa-solid fa-spinner fa-spin-pulse'
+															style={{ fontSize: '20px' }}
+														></i>
+													) : (
+														'Save'
+													)}
+												</button>
 											</form>
-										</div>
+										</>
 									)
 								) : (
 									<>
