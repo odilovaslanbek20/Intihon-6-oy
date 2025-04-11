@@ -13,22 +13,10 @@ function Teachers() {
 	const [isPage, setIsPage] = useState(true)
 	const [message, setMessage] = useState('')
 	const [isCards, setCards] = useState(true)
-	const [fullname, setName] = useState('')
-	const [email, setEmail] = useState('')
-	const [password, setIs] = useState('')
-	const [phone_number, setPhone] = useState('')
-	const [Role, setRole] = useState('')
 	const [image, setImage] = useState('')
-	const [is_verified, setVerified] = useState('')
 	const [users, setUsers] = useState('')
 	const [isDisabled, setDisabled] = useState(false)
 	const [isUser, setIsUser] = useState(true)
-	const [nameError, setNameError] = useState(false)
-	const [emailError, setEmailError] = useState(false)
-	const [roleError, setRoleError] = useState(false)
-	const [phoneError, setPhoneError] = useState(false)
-	const [passwordError, setPasswordError] = useState(false)
-	const [verifiedError, setVerifiedError] = useState(false)
 	const [originalUsers, setOriginalUsers] = useState(null)
 	const [displayUsers, setDisplayUsers] = useState(null)
 	const [searchTerm, setSearchTerm] = useState('')
@@ -36,11 +24,6 @@ function Teachers() {
 	const userlar = useRef()
 
 	const pathName = location.pathname
-
-	function handleBack() {
-		setIspage(true)
-		localStorage.setItem('isPage', JSON.stringify(true))
-	}
 
 	setInterval(() => {
 		localStorage.setItem('isPage', JSON.stringify(isPage))
@@ -154,7 +137,7 @@ function Teachers() {
 				}, 2000)
 			})
 	}
-
+	
 	return (
 		<>
 			{modal && (
@@ -343,6 +326,9 @@ function Teachers() {
 																					<td className='td'>
 																						{users?.phone_number}
 																					</td>
+																					<td className='td'>
+																						<button className='delete__btn' onClick={() => delet(users?.id)}>delete</button>
+																					</td>
 																				</tr>
 																				{displayUsers.length === 0 && (
 																					<p>
@@ -397,6 +383,7 @@ function Teachers() {
 														name='is_verified'
 														checked={formValues.is_verified}
 														onChange={handleChange}
+														required
 													/>
 													Tasdiqlanganmi?
 												</label>
@@ -407,6 +394,7 @@ function Teachers() {
 													name='image'
 													accept='image/*'
 													onChange={handleChange}
+													required
 												/>
 
 												<label className='post__label'>Telefon raqam:</label>
@@ -434,6 +422,7 @@ function Teachers() {
 													name='role'
 													value={formValues.role}
 													onChange={handleChange}
+													required
 												>
 													<option value='ADMIN'>ADMIN</option>
 													<option value='USER'>USER</option>

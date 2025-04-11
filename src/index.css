@@ -710,6 +710,15 @@ input[type="checkbox"] {
 	border-bottom: 2px solid #e0e0e0;
 }
 
+.delete__btn{
+	padding: 5px 15px;
+	border: none;
+	background-color: rgb(191, 146, 233);
+	color: #fff;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
 .custom-table tbody tr {
 	background-color: #ffffff;
 	transition: background 0.3s ease;
