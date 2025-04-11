@@ -228,12 +228,12 @@ function Teachers() {
 											onClick={() => menuBar()}
 											style={{ fontSize: '20px' }}
 										/>
-										<button
+										{isPage ? "" : (<button
 											className='post__back'
 											onClick={() => setIsPage(true)}
 										>
 											Back
-										</button>
+										</button>)}
 									</div>
 									<div className='teachers__logout'>
 										<img
@@ -326,9 +326,7 @@ function Teachers() {
 																					<td className='td'>
 																						{users?.phone_number}
 																					</td>
-																					<td className='td'>
-																						<button className='delete__btn' onClick={() => delet(users?.id)}>delete</button>
-																					</td>
+																				
 																				</tr>
 																				{displayUsers.length === 0 && (
 																					<p>
