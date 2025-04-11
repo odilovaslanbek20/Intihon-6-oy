@@ -4,7 +4,7 @@ import { FaBars } from 'react-icons/fa6'
 import { IoIosLogOut } from 'react-icons/io'
 import { FaXmark } from 'react-icons/fa6'
 import { IoIosSearch } from 'react-icons/io'
-import { use, useEffect, useRef, useState } from 'react'
+import {  useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 
 function Teachers() {
@@ -14,7 +14,6 @@ function Teachers() {
 	const [modal, setModal] = useState(false)
 	const [message, setMessage] = useState('')
 	const [isCards, setCards] = useState(true)
-	const [user, setUser] = useState(null)
 	const [fullname, setName] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setIs] = useState('')
@@ -24,14 +23,15 @@ function Teachers() {
 	const [Role, setRole] = useState('')
 	const [is_verified, setVerified] = useState('')
 	const [isUser, setIsUser] = useState(true)
-	const [image, setImgs] = useState('')
 	const [nameError, setNameError] = useState(false)
 	const [emailError, setEmailError] = useState(false)
 	const [roleError, setRoleError] = useState(false)
 	const [phoneError, setPhoneError] = useState(false)
 	const [passwordError, setPasswordError] = useState(false)
 	const [verifiedError, setVerifiedError] = useState(false)
-
+	const [originalUsers, setOriginalUsers] = useState(null);
+	const [displayUsers, setDisplayUsers] = useState(null);  
+	const [searchTerm, setSearchTerm] = useState('');
 
 	const userlar = useRef()
 
@@ -73,17 +73,35 @@ function Teachers() {
 		localStorage.clear()
 		navigate('/signIn')
 	}
-	
 
 	useEffect(() => {
 		axios
 			.get(`https://api.ashyo.fullstackdev.uz/users`)
 			.then(res => {
-				setUser(res.data)
-				setCards(false)
+				setOriginalUsers(res.data);
+				setDisplayUsers(res.data);  
+				setCards(false);
 			})
 			.catch(error => console.log(error.message))
-	}, [])
+	}, []);
+	
+	function seorch() {
+		if (searchTerm.trim() === '') {
+			setDisplayUsers(originalUsers);
+		} else {
+			const filteredUsers = originalUsers.filter(user =>
+				user.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+			setDisplayUsers(filteredUsers);
+		}
+	}
+	
+	useEffect(() => {
+		if (originalUsers) { 
+			seorch();
+		}
+	}, [searchTerm, originalUsers]);
+	
 
 	function handleSubmit(e) {
 		e.preventDefault()
@@ -169,6 +187,7 @@ function Teachers() {
 				}, 2000)
 			})
 	}
+
 
 	return (
 		<>
@@ -286,11 +305,13 @@ function Teachers() {
 												</div>
 												<div className='teachers__form'>
 													<IoIosSearch style={{ fontSize: '20px' }} />
-													<form action=''>
+													<form onChange={seorch} action=''>
 														<input
 															className='teachers__input'
 															type='text'
 															placeholder='Search for a student by name or email'
+															value={searchTerm}
+															onChange={(e) => setSearchTerm(e.target.value)}
 														/>
 													</form>
 												</div>
@@ -325,9 +346,10 @@ function Teachers() {
 																	</tr>
 																</thead>
 																<tbody className='tbody'>
-																	{user?.map(users => {
+																	{displayUsers?.map(users => {
 																		return (
-																			<tr ref={userlar}>
+																			<>
+																			  <tr ref={userlar}>
 																				<td
 																					onClick={() => userId(users?.id)}
 																					className='td name-cell'
@@ -346,6 +368,8 @@ function Teachers() {
 																					{users?.phone_number}
 																				</td>
 																			</tr>
+																			{displayUsers.length === 0 && <p>Hech qanday foydalanuvchi topilmadi.</p>}
+																			</>
 																		)
 																	})}
 																</tbody>
